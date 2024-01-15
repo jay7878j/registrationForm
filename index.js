@@ -8,11 +8,6 @@ let country = document.querySelector("#country");
 let checkbox = document.querySelector("#checkbox");
 let userDetails = document.querySelector("#userDetails");
 let selectedGenderValue = document.querySelectorAll('input[name="gender"]');
-let isValidUsername = false;
-let isValidEmail = false;
-let isValidPassowrd = false;
-let isvalidDob = false;
-let isValidCheckbox = false;
 let genderValue;
 
 function validateUserName() {
@@ -32,7 +27,6 @@ function validateUserName() {
 
   document.getElementById("userNameError").textContent = "";
 
-  isValidUsername = true;
   return true;
 }
 
@@ -46,8 +40,8 @@ function validateEmail() {
     return false;
   }
 
-  isValidEmail = true;
   errorElement.textContent = "";
+  return true;
 }
 
 function validatePassword() {
@@ -74,8 +68,6 @@ function validatePassword() {
   // Clear any previous error messages
   passwordErrorEl.textContent = "";
   confirmPasswordErrorEl.textContent = "";
-
-  isValidPassowrd = true;
   return true;
 }
 
@@ -91,9 +83,9 @@ function validateDateofBirth() {
   let ageMonths = currentDate.getMonth() - enteredDate.getMonth();
   let ageDays = currentDate.getDate() - enteredDate.getDate();
 
-  console.log(ageDays);
-  console.log(ageMonths);
-  console.log(ageYears);
+  // console.log(ageDays);
+  // console.log(ageMonths);
+  // console.log(ageYears);
   if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {
     ageYears--;
   }
@@ -102,9 +94,8 @@ function validateDateofBirth() {
     dobErrorEl.textContent = "You must be at least 18 years old.";
     return false; // Prevent form submission
   }
-
-  isvalidDob = true;
   dobErrorEl.textContent = "";
+  return true;
 }
 
 function validateAgreement() {
@@ -115,13 +106,12 @@ function validateAgreement() {
     agreement.textContent = "*Must Accept";
     return false;
   }
-
-  isValidCheckbox = true;
+  return true;
   agreement.textContent = "";
 }
 
 function showDetails() {
-  console.log(selectedGenderValue.value);
+  userDetails.classList.add("user-detail");
   let userNameDetail = document.createElement("p");
   userNameDetail.textContent = "Username: " + username.value;
   userDetails.appendChild(userNameDetail);
@@ -146,11 +136,11 @@ function showDetails() {
 function formValidate(event) {
   userDetails.textContent = "";
   event.preventDefault();
-  validateUserName();
-  validateEmail();
-  validatePassword();
-  validateDateofBirth();
-  validateAgreement();
+  let isValidUsername = validateUserName();
+  let isValidEmail = validateEmail();
+  let isValidPassowrd = validatePassword();
+  let isvalidDob = validateDateofBirth();
+  let isValidAgreement = validateAgreement();
 
   selectedGenderValue.forEach((each) => {
     // console.log(each.checked);
@@ -159,18 +149,22 @@ function formValidate(event) {
       //   console.log(each.value);
     }
   });
-  console.log(genderValue);
+  // console.log(genderValue);
 
   let isValid =
     isValidUsername &&
     isValidPassowrd &&
+    isValidEmail &&
     isvalidDob &&
-    isValidCheckbox &&
-    isValidEmail;
-  console.log(isValid);
+    isValidAgreement &&
+    genderValue !== undefined;
 
+  console.log(isValid);
   if (isValid) {
     showDetails();
+  } else {
+    userDetails.textContent = "";
+    userDetails.classList.remove("user-detail");
   }
 }
 
